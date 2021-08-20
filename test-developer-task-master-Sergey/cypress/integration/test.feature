@@ -1,7 +1,7 @@
 Feature: Checking 'Add Asset' page functionality
 #
-#  #Background:
-#  #...
+ #Background:
+ #...
 #
   Scenario: Submit correct asset
     Given I navigate to Add Asset tab
@@ -30,7 +30,7 @@ Feature: Checking 'Add Asset' page functionality
 
   Scenario: Checking displaying count of assets in the table
     Given I navigate to Existing Assets tab
-    When I select from Show entries to display 100 assets in the table
+    When I select from Show entries to display '100' assets in the table
     Then I see 100 asset in the table
 
   Scenario: Checking Pagination of assets in the table

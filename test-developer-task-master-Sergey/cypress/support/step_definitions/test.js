@@ -1,6 +1,7 @@
 /// <reference types="cypress" />
 import {generateAsset} from "../generate_asset"
-import {And, Given, Then, When} from "cypress-cucumber-preprocessor/steps";
+import {selectEntries} from "../selectEntries";
+import {And, Given, Then, When, Before} from "cypress-cucumber-preprocessor/steps";
 
 //import assetList from "../requests";
 
@@ -10,9 +11,16 @@ async function getAssetList()
     return response.json();
 }
 
-let assetNumber = generateAsset()
+let assetNumber = generateAsset();
+
 let sortValue = assetNumber.substring(0,4);
 const equals = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+
+Before(() => {
+    for(let i=0;i<10;i++){
+        let asset = generateAsset();
+        cy.request('Post',`http://localhost:3000/addAsset/${asset}`);}
+});
 
 Given(`I navigate to Add Asset tab`, () =>{
     cy.visit('http://localhost:3000/#/add');
@@ -51,7 +59,12 @@ Then(`I received message that asset is already exist`, () => {
 //Existing assets tests
 
 Given(`I navigate to Existing Assets tab`, () =>{
+    // cy.server()
+    // cy.route('**/getAssets').as('getAssets')
     cy.visit('http://localhost:3000/#/assets');
+    //cy.get('.spinner-border').should('not.be.visible');
+    cy.get('.d-flex').should('not.be.visible');
+    // cy.wait("@getAssets");
 })
 
 When(`I input asset value into search`, () => {
@@ -78,8 +91,10 @@ Then (`I see sorted result in table`, () =>{
             .contains(`${sortValue}`);
 })
 
-When (`I select from Show entries to display 100 assets in the table`, () =>{
-    cy.get('.custom-select.custom-select-sm.form-control.form-control-sm').select('100');
+
+When (`I select from Show entries to display {string} assets in the table`, (value) =>{
+    // cy.get('.custom-select.custom-select-sm.form-control.form-control-sm').select(`${string}`);
+    selectEntries(value);
 })
 
 Then(`I see 100 asset in the table`, () =>{
